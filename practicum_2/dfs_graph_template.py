@@ -11,17 +11,19 @@ def visit(node: Any):
 
 
 def dfs_iterative(G: nx.Graph, node: Any, visited: dict[Any]):
+    visited = {n: False for n in G}
+
     ##########################
     ### PUT YOUR CODE HERE ###
     ##########################
-    pass
 
 
 def topological_sort(G: nx.DiGraph, node: Any, visited: dict[Any]):
+    visited = {n: False for n in G}
+
     ##########################
     ### PUT YOUR CODE HERE ###
     ##########################
-    pass
 
 
 if __name__ == "__main__":
@@ -31,13 +33,11 @@ if __name__ == "__main__":
 
     print("Iterative DFS")
     print("-" * 32)
-    visited = {n: False for n in G}
-    dfs_iterative(G, node="0", visited=visited)
+    dfs_iterative(G, node="0")
     print()
 
     G = nx.read_edgelist("practicum_2/graph_2.edgelist", create_using=nx.DiGraph)
     plot_graph(G)
     print("Topological sort")
     print("-" * 32)
-    visited = {n: False for n in G}
-    topological_sort(G, node="0", visited=visited)
+    topological_sort(G, node="0")
