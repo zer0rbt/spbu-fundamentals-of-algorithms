@@ -10,7 +10,7 @@ def visit(node: Any):
     print(f"Wow, it is {node} right here!")
 
 
-def dfs_iterative(G: nx.Graph, node: Any, visited: dict[Any]):
+def dfs_iterative(G: nx.Graph, node: Any):
     visited = {n: False for n in G}
 
     ##########################
@@ -18,7 +18,7 @@ def dfs_iterative(G: nx.Graph, node: Any, visited: dict[Any]):
     ##########################
 
 
-def topological_sort(G: nx.DiGraph, node: Any, visited: dict[Any]):
+def topological_sort(G: nx.DiGraph, node: Any):
     visited = {n: False for n in G}
 
     ##########################
