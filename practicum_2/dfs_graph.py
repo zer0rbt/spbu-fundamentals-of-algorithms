@@ -3,19 +3,7 @@ from typing import Any
 
 import networkx as nx
 
-
-def plot_graph(G):
-    options = dict(
-        font_size=12,
-        node_size=500,
-        node_color="white",
-        edgecolors="black",
-    )
-    pos = nx.spring_layout(G)
-    nx.draw_networkx(G, pos, **options)
-    if nx.is_weighted(G):
-        labels = {e: G.edges[e]["weight"] for e in G.edges}
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+from src.plotting import plot_graph
 
 
 def visit(node: Any):
@@ -30,7 +18,7 @@ def dfs_recursive(G: nx.Graph, node: Any, visited: dict[Any]):
             dfs_recursive(G, node=n_neigh, visited=visited)
 
 
-def dfs_iterative(G: nx.Graph, node: Any, visited: dict[Any]):
+def dfs_iterative(G: nx.Graph, node: Any):
     visited = {n: False for n in G}
     stack = [node]  # stack = queue.LifoQueue(); stack.put(node)
     while len(stack) > 0:  # while not stack.empty():
