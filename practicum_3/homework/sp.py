@@ -16,7 +16,7 @@ def dijkstra_sp(G: nx.Graph, source_node="0") -> dict[Any, list[Any]]:
 
 
 if __name__ == "__main__":
-    G = nx.read_edgelist("practicum_3/graph_1.edgelist", create_using=nx.Graph)
+    G = nx.read_edgelist("practicum_3/homework/graph_1.edgelist", create_using=nx.Graph)
     plot_graph(G)
     shortest_paths = dijkstra_sp(G, source_node="0")
     test_node = "5"
