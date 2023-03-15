@@ -10,7 +10,7 @@ def visit(node: Any):
     print(f"Wow, it is {node} right here!")
 
 
-# I think here you can easily understand all code without many comments just by variable names
+# I think here you can easily understand all code without many comments, just by reading variable names
 def dfs_iterative(G: nx.Graph, node: Any) -> None:
     visited = {n: False for n in G}
     ways_q = queue.LifoQueue()
@@ -29,7 +29,7 @@ def dfs_iterative(G: nx.Graph, node: Any) -> None:
         [ways_q.put(neighbor_node) for neighbor_node in not_visited_nodes_list]
 
 
-# Pretty same as previous: variables have easy-to-understand names and not many comments
+# Pretty same as previous: variables have easy-to-understand names and there are not many comments
 def topological_sort(G: nx.DiGraph, node: Any) -> None:
     visited = {n: False for n in G}
     ways_q = queue.LifoQueue()
