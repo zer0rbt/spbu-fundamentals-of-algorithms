@@ -1,3 +1,4 @@
+import queue
 from time import perf_counter
 
 
@@ -36,15 +37,48 @@ class Maze:
             print()  # linebreak
 
 
+def move_rate(i: int, j: int) -> str:
+    try:
+        if maze.list_view[i][j] == " ":
+            return "ok"
+        elif maze.list_view[i][j] == "X":
+            return "win"
+    except IndexError:  # We need that in case of trying to move out from maze
+        pass
+    return "bad"
+
+
+# Note: variable-naming here is bad, but in other tasks it is better, at least I hope so.
 def solve(maze: Maze) -> None:
     path = ""  # solution as a string made of "L", "R", "U", "D"
 
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
+    opposite_direction = {"L": "R", "R": "L", "D": "U", "U": "D"}
+    paths_list = queue.Queue()
 
-    print(f"Found: {path}")
-    maze.print(path)
+    # Elements in queue (using numpy syntax) have this dtype:
+    # [("cell_coordinates", int, (2, )), ("way_to_cell", str, _rand_int_)]
+    paths_list.put(((1, maze.start_j), "D"))
+    while not paths_list.empty():
+        current_cell = paths_list.get()
+        possible_ways = ["U", "L", "D", "R"]
+
+        rated_ways_list = list(map(lambda w: move_rate(*_shift_coordinate(*current_cell[0], w)), possible_ways))
+
+        for way in range(4):
+            # Guard statement to secure small loops (ex: "LRLRLRLR") and ways rated as "bad"
+            if opposite_direction[possible_ways[way]] == current_cell[1][-1] or rated_ways_list[way] == "bad":
+                continue
+
+            # Win-check and adding "good" possible_ways into queue.
+            if rated_ways_list[way] == "win":
+                path = current_cell[1] + possible_ways[way]
+
+                print(f"Found: {path}")
+                maze.print(path)
+                return None  # This "return" escaping all "for" and "while" cycles in one line
+            else:
+                paths_list.put((
+                    _shift_coordinate(*current_cell[0], possible_ways[way]), current_cell[1] + possible_ways[way]))
 
 
 def _shift_coordinate(i: int, j: int, move: str) -> tuple[int, int]:
@@ -60,7 +94,7 @@ def _shift_coordinate(i: int, j: int, move: str) -> tuple[int, int]:
 
 
 if __name__ == "__main__":
-    maze = Maze.from_file("practicum_2/homework/maze_2.txt")
+    maze = Maze.from_file("maze_2.txt")  # I had "FileNotFoundError" on old path.
     t_start = perf_counter()
     solve(maze)
     t_end = perf_counter()
