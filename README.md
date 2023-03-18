@@ -30,3 +30,28 @@ Plan:
 1. Warm-up
 2. Complete `mst_template.py`
 3. Complete `sp_template.py`. We can do both the original version and the version with a priority queue.
+
+## Practicum 4
+
+We study fundamental data structures.
+
+Plan:
+1. Warm-up
+2. Complete `valid_parentheses.py` (LIFO)
+3. Complete `time_needed_to_buy_tickets.py` (FIFO)
+4. Complete `linked_list.py` (linked list)
+
+Homework:
+1. `time_needed_to_buy_tickets.py`: implement a proper solution for this problem.
+
+## Practicum 5
+
+We study simple computaional geomtery algorithms such as convex hull computing.
+
+Plan:
+1. Warm-up
+2. Complete `slow_convex_hull.py`
+3. Complete `qwer`
+
+Homework:
+1. `convex_bucket.py`: implement a convex hull algorithm constructing only the lower part of a convex hull which would "hold" all the points if they fell due to the gravity.
