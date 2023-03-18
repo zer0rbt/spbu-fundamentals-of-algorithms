@@ -52,7 +52,7 @@ def move_rate(i: int, j: int) -> str:
 def solve(maze: Maze) -> None:
     path = ""  # solution as a string made of "L", "R", "U", "D"
 
-    opposite_direction = {"L": "R", "R": "L", "D": "U", "U": "D"}
+    was_set = set()
     paths_list = queue.Queue()
 
     # Elements in queue (using numpy syntax) have this dtype:
@@ -60,13 +60,17 @@ def solve(maze: Maze) -> None:
     paths_list.put(((1, maze.start_j), "D"))
     while not paths_list.empty():
         current_cell = paths_list.get()
+        if current_cell[0] in was_set:
+            continue
+
+        was_set.add(current_cell[0])
         possible_ways = ["U", "L", "D", "R"]
 
         rated_ways_list = list(map(lambda w: move_rate(*_shift_coordinate(*current_cell[0], w)), possible_ways))
 
         for way in range(4):
-            # Guard statement to secure small loops (ex: "LRLRLRLR") and ways rated as "bad"
-            if opposite_direction[possible_ways[way]] == current_cell[1][-1] or rated_ways_list[way] == "bad":
+            # Guard statement to secure ways rated as "bad"
+            if rated_ways_list[way] == "bad":
                 continue
 
             # Win-check and adding "good" possible_ways into queue.
