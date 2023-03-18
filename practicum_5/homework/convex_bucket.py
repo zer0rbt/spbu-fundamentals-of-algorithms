@@ -7,6 +7,7 @@ from src.plotting import plot_points
 
 
 def convex_bucket(points: NDArray) -> NDArray:
+    """Complexity: O(n log n)"""
     clockwise_sorted_ch = []
 
     ##########################

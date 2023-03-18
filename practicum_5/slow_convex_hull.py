@@ -58,7 +58,7 @@ def slow_convex_hull(points: NDArray) -> NDArray:
 
 
 if __name__ == "__main__":
-    points = np.loadtxt("practicum_5/points_5.txt")
+    points = np.loadtxt("practicum_5/points_1.txt")
     plot_points(points, markersize=20)
 
     # 1. Slow convex hull. Trivial to implement, but O(N^3)
