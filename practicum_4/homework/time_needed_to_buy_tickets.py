@@ -5,13 +5,8 @@ import numpy as np
 
 
 def time_taken(tickets: list[int], k: int) -> int:
-    seconds_elapsed = 0
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    return seconds_elapsed
+    # One-line code is too beautiful to get rid of complicity
+    return sum(list(map(lambda x: min(x[1], tickets[k] - (x[0] > k)), enumerate(tickets))))
 
 
 if __name__ == "__main__":
