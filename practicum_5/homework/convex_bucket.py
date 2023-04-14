@@ -6,7 +6,6 @@ import numpy as np
 from numpy.typing import NDArray
 
 from src.plotting import plot_points
-import queue
 
 
 # Next two funcs stolen from slow_convex_hull
@@ -33,7 +32,6 @@ def isclose(p: NDArray, q: NDArray) -> bool:
 
 def convex_bucket(points: NDArray) -> NDArray:
     """Complexity: O(n log n)"""
-    clockwise_sorted_ch = []
 
     # Sort the points first by y-coordinate and then by x-coordinate
     sorted_points = points[np.lexsort((points[:, 0], points[:, 1]))]
@@ -49,13 +47,13 @@ def convex_bucket(points: NDArray) -> NDArray:
         lower_hull.put(point)
 
     # Convert the LifoQueue to a numpy array and remove any vertical lines of points at the edges
-    output = np.array(list(lower_hull.queue))
-    if np.isclose(output[0][0], output[1][0]):
-        output = output[1:]
-    if np.isclose(output[-2][0], output[-1][0]):
-        output = output[:-1]
+    clockwise_sorted_ch = np.array(list(lower_hull.queue))
+    if np.isclose(clockwise_sorted_ch[0][0], clockwise_sorted_ch[1][0]):
+        clockwise_sorted_ch = clockwise_sorted_ch[1:]
+    if np.isclose(clockwise_sorted_ch[-2][0], clockwise_sorted_ch[-1][0]):
+        clockwise_sorted_ch = clockwise_sorted_ch[:-1]
 
-    return output
+    return clockwise_sorted_ch
 
 
 if __name__ == "__main__":
@@ -67,7 +65,6 @@ if __name__ == "__main__":
         t_start = perf_counter()
         ch = convex_bucket(points)
         t_end = perf_counter()
-        print(ch)
         print(f"Elapsed time: {t_end - t_start} sec")
         plot_points(points, convex_hull=ch, markersize=20)
         print()
