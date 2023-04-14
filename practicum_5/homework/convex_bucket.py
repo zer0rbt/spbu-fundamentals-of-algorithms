@@ -34,7 +34,7 @@ def convex_bucket(points: NDArray) -> NDArray:
     """Complexity: O(n log n)"""
 
     # Sort the points first by y-coordinate and then by x-coordinate
-    sorted_points = points[np.lexsort((points[:, 0], points[:, 1]))]
+    sorted_points = points[np.lexsort((points[:, 1], points[:, 0]))]
 
     if len(sorted_points) <= 1:
         return sorted_points
@@ -47,7 +47,7 @@ def convex_bucket(points: NDArray) -> NDArray:
         lower_hull.put(point)
 
     # Convert the LifoQueue to a numpy array and remove any vertical lines of points at the edges
-    clockwise_sorted_ch = np.array(list(lower_hull.queue))
+    clockwise_sorted_ch = np.array(list(lower_hull.queue[::-1]))
     if np.isclose(clockwise_sorted_ch[0][0], clockwise_sorted_ch[1][0]):
         clockwise_sorted_ch = clockwise_sorted_ch[1:]
     if np.isclose(clockwise_sorted_ch[-2][0], clockwise_sorted_ch[-1][0]):
@@ -57,7 +57,7 @@ def convex_bucket(points: NDArray) -> NDArray:
 
 
 if __name__ == "__main__":
-    for i in range(10, 11):
+    for i in range(1, 11):
         txtpath = f"practicum_5/homework/points_{i}.txt"
         points = np.loadtxt(txtpath)
         print(f"Processing {txtpath}")
