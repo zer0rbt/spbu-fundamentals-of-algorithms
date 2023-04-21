@@ -77,10 +77,11 @@ class XorDoublyLinkedList:
         self.ids.append(id(x))
 
         if self.head is None:
-            self.head = self.tail = id_to_el(id(x))
+            self.head = self.tail = x
             return
+
         if self.head.np is not None:
-            self.head.np = id(self.head.next(0)) ^ id(x)
+            self.head.np = self.head.np ^ id(x)
         else:
             self.head.np = id(x)
         x.np = id(self.head)
@@ -143,7 +144,7 @@ if __name__ == "__main__":
             l.insert(el)
         for op_info in c["input"]["ops"]:
             if op_info["op"] == "insert":
-                l.remove(op_info["key"])
+                l.insert(op_info["key"])
             elif op_info["op"] == "remove":
                 l.remove(op_info["key"])
             elif op_info["op"] == "reverse":
