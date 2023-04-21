@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
+import ctypes
 
 import yaml
 
@@ -11,31 +12,23 @@ class Element:
     data: Any = None
     np: int = None
 
-    def next(self) -> Element:
+    def next(self, prev_np) -> Element:
+        a = ctypes.cast(self.np ^ prev_np, ctypes.py_object).value
+        return ctypes.cast(self.np ^ prev_np, ctypes.py_object).value
 
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
+    def prev(self, next_np) -> Element:
+        return ctypes.cast(self.np ^ next_np, ctypes.py_object).value
 
-        pass
 
-    def prev(self) -> Element:
-
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
-
-        pass
+def id_to_el(id: int) -> Any:
+    return ctypes.cast(id, ctypes.py_object).value
 
 
 class XorDoublyLinkedList:
     def __init__(self) -> None:
         self.head: Element = None
-
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
-
+        self.tail: Element = None
+        self.ids = list()  # Нужно, чтобы нам не мешал сборщик  мусора
         pass
 
     def __repr__(self) -> str:
@@ -43,11 +36,15 @@ class XorDoublyLinkedList:
 
     def __str__(self) -> str:
         node_keys = []
-
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
-
+        cur_el = self.head
+        prev_id = 0
+        if cur_el is None:
+            return ""
+        while id(cur_el.next(prev_id)) != prev_id:
+            node_keys.append(cur_el.key)
+            i = id(cur_el)
+            cur_el = cur_el.next(prev_id)
+            prev_id = i
         return " <-> ".join(node_keys)
 
     def to_pylist(self) -> list[Any]:
@@ -61,46 +58,70 @@ class XorDoublyLinkedList:
     def empty(self):
         return self.head is None
 
-    def search(self, k: Element) -> Element:
+    def search(self, k: Any) -> Element:
         """Complexity: O(n)"""
-
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
-
-        pass
+        print(self)
+        cur_id = 0
+        next_el: Element = self.head
+        while next_el != self.tail:
+            if next_el.key == k:
+                break
+            next_el, cur_id = next_el.next(cur_id), id(next_el)
+        return next_el
 
     def insert(self, x: Element) -> None:
         """Insert to the front of the list (i.e., it is 'prepend')
         Complexity: O(1)
         """
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
+        x = Element(key=x)
+        self.ids.append(id(x))
 
-        pass
+        if self.head is None:
+            self.head = self.tail = id_to_el(id(x))
+            return
+        if self.head.np is not None:
+            self.head.np = id(self.head.next(0)) ^ id(x)
+        else:
+            self.head.np = id(x)
+        x.np = id(self.head)
+        self.head = x
 
-    def remove(self, x: Element) -> None:
+    def remove(self, x: Any) -> None:
         """Remove x from the list
         Complexity: O(1)
         """
+        if x is None:
+            return
 
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
+        if self.tail is None:
+            raise NameError
 
-        pass
+        self.ids.remove(id(self.search(x)))
+
+        # Code from "search"
+
+        cur_id = 0
+        next_el: Element = self.head
+        while next_el != self.tail:
+            if next_el.key == x:
+                break
+            next_el, cur_id = next_el.next(cur_id), id(next_el)
+
+        # renaming variables to ...
+        cur_el = next_el
+        prev_id = cur_id
+        next_el = cur_el.next(prev_id)
+
+        next_el.np = prev_id ^ id(next_el.next(id(cur_el)))
+        id_to_el(prev_id).np = id(id_to_el(prev_id).prev(id(cur_el))) ^ id(next_el)
 
     def reverse(self) -> XorDoublyLinkedList:
         """Returns the same list but in the reserved order
         Complexity: O(1)
         """
-
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
-
-        pass
+        ret = self
+        ret.head, ret.tail = ret.tail, ret.head
+        return ret
 
 
 if __name__ == "__main__":
