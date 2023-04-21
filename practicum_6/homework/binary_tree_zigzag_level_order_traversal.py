@@ -1,42 +1,29 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
+from collections.abc import Iterable
 
 import yaml
 
 
-@dataclass
-class Node:
-    key: Any
-    data: Any = None
-    left: Node = None
-    right: Node = None
+def zigzagLevelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+    out = [[root]]
+    while out[-1] != [None] * len(out[-1]):
+
+        new = []
+        for e in out[-1]:
+            if e is None:
+                new += [None] * 2
+                continue
+            new.append(e.left)
+            new.append(e.right)
+        out.append(new)
+    out = list(map(lambda x: list(map(lambda z: z.val, list(filter(lambda y: y is not None, x)))), out))
+    out = [out[e][::(-1) ** e] for e in range(len(out) - 1)]
+    return out
 
 
-class BinaryTree:
-    def __init__(self) -> None:
-        self.root: Node = None
 
-    def empty(self) -> bool:
-        return self.root is None
-
-    def zigzag_level_order_traversal(self) -> list[Any]:
-
-        ##########################
-        ### PUT YOUR CODE HERE ###
-        ##########################
-
-        pass
-
-
-def build_tree(list_view: list[Any]) -> BinaryTree:
-    bt = BinaryTree()
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    pass
 
 
 if __name__ == "__main__":
