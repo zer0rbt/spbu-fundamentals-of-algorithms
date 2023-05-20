@@ -5,32 +5,28 @@ mply = np.matmul
 inv = np.linalg.inv
 
 
-def absmax(A: NDArray, ind: int) -> int:
-    return np.argmax(A, axis=0)[ind] if abs(np.max(A, axis=0))[ind] > abs(np.min(A, axis=0))[ind] else \
-    np.argmin(A, axis=0)[ind]
-
-
 def lu(A: NDArray, permute: bool) -> tuple[NDArray, NDArray, NDArray]:
-    n = int(A.size ** 0.5)
-    A_was = np.array(list(A))
-    M = np.eye(n)
+    n = A.shape[0]
+    L = np.eye(n)
+    U = np.copy(A)
     P = np.eye(n)
-    for i in range(n - 1):
-        if permute:
-            max_arg = i + absmax(A[i:], i)
-            _ = list(A[i])
-            A[i], A[max_arg] = A[max_arg], _
-            _ = list(P[i])
-            P[i], P[max_arg] = P[max_arg], _
-        for j in range(i + 1, n):
-            M[j][i] = A[j][i] / A[i][i]
-            A[j] -= A[i] * M[j][i]
-    L = M
-    print(inv(L))
-    U = mply(np.swapaxes(np.swapaxes(inv(L),0,1)[::-1], 0, 1), A_was)
-    print(mply(inv(P), A_was))
+    try:
+        for k in range(n - 1):
+        # Partial Pivoting
 
-    return L, A, P
+            if permute:
+                max_index = np.argmax(np.abs(U[k:, k])) + k
+                if max_index != k:
+                    U[[k, max_index], :] = U[[max_index, k], :]  # Swap rows in U
+                    P[[k, max_index], :] = P[[max_index, k], :]  # Swap rows in P
+                    if k >= 1:
+                        L[[k, max_index], :k] = L[[max_index, k], :k]  # Swap rows in L before k
+
+        for j in range(k + 1, n):
+            L[j, k] = U[j, k] / U[k, k]
+            U[j, k:] -= L[j, k] * U[k, k:]
+
+    return L, U, P
 
 
 def solve(L: NDArray, U: NDArray, P: NDArray, b: NDArray) -> NDArray:
